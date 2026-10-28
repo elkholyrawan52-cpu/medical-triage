@@ -1,0 +1,49 @@
+{
+  "age_months": {"type": "number", "kind": "input", "group": "vitals", "ar": "العمر بالشهور", "en": "Age in months"},
+  "temp_c": {"type": "number", "kind": "input", "group": "vitals", "ar": "درجة الحرارة (°م)", "en": "Temperature (°C)"},
+  "hr": {"type": "number", "kind": "input", "group": "vitals", "ar": "النبض (ضربة/دقيقة)", "en": "Heart rate (bpm)"},
+  "rr": {"type": "number", "kind": "input", "group": "vitals", "ar": "معدل التنفس (نفس/دقيقة)", "en": "Respiratory rate (breaths/min)"},
+  "spo2": {"type": "number", "kind": "input", "group": "vitals", "ar": "تشبّع الأكسجين SpO2 (%)", "en": "Oxygen saturation SpO2 (%)"},
+  "pain_score": {"type": "number", "kind": "input", "group": "vitals", "ar": "شدة الألم من 0 إلى 10", "en": "Pain score 0-10"},
+
+  "unresponsive": {"type": "bool", "kind": "input", "group": "consciousness", "ar": "فاقد الوعي أو مش بيستجيب خالص", "en": "Unresponsive / cannot be woken"},
+  "new_confusion": {"type": "bool", "kind": "input", "group": "consciousness", "ar": "تشوش أو تخليط أو نعاس شديد جديد (تغيّر مفاجئ عن المعتاد)", "en": "New confusion, disorientation or extreme drowsiness (sudden change from normal)"},
+  "seizure_first_time": {"type": "bool", "kind": "input", "group": "consciousness", "ar": "تشنجات لأول مرة في حياته", "en": "First-ever seizure (fit)"},
+
+  "severe_respiratory_distress": {"type": "bool", "kind": "input", "group": "breathing", "ar": "صعوبة شديدة في التنفس (بيلهث أو مش قادر يكمّل جملة)", "en": "Severe difficulty breathing (gasping, choking, cannot get words out)"},
+  "sudden_more_breathless": {"type": "bool", "kind": "input", "group": "breathing", "ar": "ضيق النفس زاد فجأة عن المعتاد", "en": "Suddenly more short of breath than usual"},
+  "shortness_of_breath": {"type": "bool", "kind": "input", "group": "breathing", "ar": "ضيق في النفس", "en": "Shortness of breath"},
+
+  "chest_pain": {"type": "bool", "kind": "input", "group": "chest", "ar": "ألم أو انزعاج في الصدر", "en": "Chest pain or discomfort"},
+  "chest_pain_tight_pressure": {"type": "bool", "kind": "input", "group": "chest", "ar": "الألم زي ضغط أو عصر أو تقل على الصدر", "en": "Pain feels tight, squeezing, heavy or like pressure"},
+  "chest_pain_spreads": {"type": "bool", "kind": "input", "group": "chest", "ar": "الألم بينتشر للذراع أو الرقبة أو الفك أو الضهر", "en": "Pain spreads to arm, neck, jaw or back"},
+  "chest_pain_over_15min": {"type": "bool", "kind": "input", "group": "chest", "ar": "الألم مستمر أكتر من 15 دقيقة", "en": "Pain lasting more than 15 minutes"},
+  "sweating": {"type": "bool", "kind": "input", "group": "chest", "ar": "عرق بارد أو غزير", "en": "Sweating"},
+  "nausea_vomiting": {"type": "bool", "kind": "input", "group": "chest", "ar": "غثيان أو قيء", "en": "Feeling or being sick"},
+  "lightheaded": {"type": "bool", "kind": "input", "group": "chest", "ar": "دوخة أو إحساس بالإغماء", "en": "Lightheaded or faint"},
+  "pale_blue_grey_skin": {"type": "bool", "kind": "input", "group": "chest", "ar": "جلد شاحب أو أزرق أو رمادي (الشفايف/اللسان/راحة اليد)", "en": "Pale, blue or grey skin (lips, tongue, palms)"},
+
+  "face_droop": {"type": "bool", "kind": "input", "group": "neuro", "ar": "ميلان أو ارتخاء في جانب من الوجه / مش قادر يبتسم", "en": "Face drooping on one side / cannot smile"},
+  "arm_weakness": {"type": "bool", "kind": "input", "group": "neuro", "ar": "مش قادر يرفع الدراعين ويثبتهم (ضعف أو تنميل في دراع)", "en": "Cannot raise both arms and keep them there (weakness/numbness in one arm)"},
+  "slurred_speech": {"type": "bool", "kind": "input", "group": "neuro", "ar": "كلام غير واضح أو تلعثم أو تخليط في الكلام", "en": "Slurred speech or sounds confused"},
+  "sudden_one_sided_weakness_numbness": {"type": "bool", "kind": "input", "group": "neuro", "ar": "ضعف أو تنميل مفاجئ في الوجه أو الذراع أو الرجل في جانب واحد", "en": "Sudden weakness or numbness of face, arm or leg on one side"},
+  "sudden_vision_loss": {"type": "bool", "kind": "input", "group": "neuro", "ar": "فقدان أو زغللة مفاجئة في النظر", "en": "Sudden loss or blurring of vision"},
+  "worst_headache_of_life": {"type": "bool", "kind": "input", "group": "neuro", "ar": "أسوأ صداع في حياته وجه فجأة", "en": "Sudden 'worst headache of my life'"},
+
+  "swelling_lips_mouth_throat_tongue": {"type": "bool", "kind": "input", "group": "allergy", "ar": "ورم مفاجئ في الشفايف أو الفم أو الحلق أو اللسان", "en": "Sudden swelling of lips, mouth, throat or tongue"},
+  "throat_tight_difficulty_swallowing": {"type": "bool", "kind": "input", "group": "allergy", "ar": "ضيق في الحلق أو صعوبة في البلع", "en": "Tight throat or difficulty swallowing"},
+  "allergen_exposure_or_hives": {"type": "bool", "kind": "input", "group": "allergy", "ar": "اتعرّض لمسبب حساسية (أكل/دواء/لدغة) أو ظهر طفح وهرش", "en": "Exposed to an allergen (food/medicine/sting) or has itchy raised rash (hives)"},
+
+  "stiff_neck": {"type": "bool", "kind": "input", "group": "infection", "ar": "تيبّس في الرقبة", "en": "Stiff neck"},
+  "photophobia": {"type": "bool", "kind": "input", "group": "infection", "ar": "مش قادر يبص للضوء القوي", "en": "Cannot look at bright lights"},
+  "non_blanching_rash": {"type": "bool", "kind": "input", "group": "infection", "ar": "طفح أو بقع حمراء/بنفسجية ما بتختفيش لما تضغط عليها بكوباية شفافة (Glass test)", "en": "Rash that does not fade when a clear glass is pressed on it (glass test)"},
+  "fever_after_vaccination_48h": {"type": "bool", "kind": "input", "group": "infection", "ar": "الحرارة ظهرت خلال 48 ساعة بعد تطعيم", "en": "Fever started within 48 hours after a vaccination"},
+
+  "danger_zone_vitals": {"type": "bool", "kind": "computed", "ar": "علامات حيوية خارج الحدود الآمنة للعمر (ESI)", "en": "Danger-zone vital signs for age (ESI)"},
+  "any_fast_sign": {"type": "bool", "kind": "derived", "ar": "علامة FAST", "en": "Any FAST sign"},
+  "respiratory_failure_sign": {"type": "bool", "kind": "derived", "ar": "علامة فشل تنفسي", "en": "Respiratory failure sign"},
+  "meningitis_red_flag": {"type": "bool", "kind": "derived", "ar": "علامة خطر التهاب سحائي/إنتان", "en": "Meningitis/sepsis red flag"},
+  "acs_pattern": {"type": "bool", "kind": "derived", "ar": "نمط ألم صدر مشتبه بالقلب", "en": "Heart-attack pattern chest pain"},
+  "acs_associated": {"type": "bool", "kind": "derived", "ar": "ألم صدر مع أعراض مصاحبة", "en": "Chest pain with associated symptoms"},
+  "anaphylaxis_pattern": {"type": "bool", "kind": "derived", "ar": "نمط صدمة تحسسية", "en": "Anaphylaxis pattern"}
+}

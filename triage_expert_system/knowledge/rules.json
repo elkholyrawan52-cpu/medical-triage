@@ -1,0 +1,271 @@
+{
+  "meta": {
+    "name": "Medical Triage Expert System - Knowledge Base",
+    "version": "0.1",
+    "note": "Every rule cites at least one source id from 'sources'. Rules must be reviewed by a licensed clinician before any real-world use."
+  },
+  "sources": {
+    "ESI_V4": {
+      "title": "Emergency Severity Index (ESI) v4 Implementation Handbook, Chapter 3",
+      "org": "AHRQ (U.S. Dept. of Health & Human Services)",
+      "url": "https://www.ahrq.gov/research/esi/esihandbk.pdf"
+    },
+    "NHS_FAST": {
+      "title": "Symptoms of a stroke (Act FAST)",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/actFAST"
+    },
+    "NHS_STROKE_WALES": {
+      "title": "Signs of stroke - FAST",
+      "org": "Betsi Cadwaladr University Health Board (NHS Wales)",
+      "url": "https://bcuhb.nhs.wales/services/hospital-services/stroke-service/signs-of-stroke-fast/"
+    },
+    "NHS_HEART_ATTACK": {
+      "title": "Heart attack",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/conditions/heart-attack/"
+    },
+    "NHS_CHEST_PAIN": {
+      "title": "Chest pain",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/symptoms/chest-pain/"
+    },
+    "NHS_ANAPHYLAXIS": {
+      "title": "Anaphylaxis",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/conditions/anaphylaxis/"
+    },
+    "NHS_ANGIOEDEMA": {
+      "title": "Angioedema",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/conditions/angioedema/causes/"
+    },
+    "NHS_MENINGITIS": {
+      "title": "Meningitis",
+      "org": "NHS (UK)",
+      "url": "https://www.nhs.uk/conditions/meningitis/"
+    },
+    "NOTTS_ICB_FEVER": {
+      "title": "Concerned your child is unwell - meningitis (fever in babies under 3 months)",
+      "org": "NHS Nottingham and Nottinghamshire ICB",
+      "url": "https://notts.icb.nhs.uk/your-services/childrens-health-and-wellbeing/concerned-your-child-is-unwell-3-months-and-older/meningitis/"
+    },
+    "SYSTEM_DEFAULT": {
+      "title": "System default when no red-flag rule fires (not a clinical source)",
+      "org": "This project",
+      "url": ""
+    }
+  },
+  "rules": [
+    {
+      "id": "D-FAST", "type": "derive",
+      "if_any": ["face_droop", "arm_weakness", "slurred_speech"],
+      "then": {"fact": "any_fast_sign"},
+      "sources": ["NHS_FAST"],
+      "reason_ar": "أي علامة واحدة من FAST (الوجه/الذراع/الكلام) كافية لاشتباه السكتة الدماغية",
+      "reason_en": "Any single FAST sign (face, arms, speech) is enough to suspect a stroke"
+    },
+    {
+      "id": "D-RESP-FAIL", "type": "derive",
+      "if_any": [{"fact": "spo2", "op": "<", "value": 90}, "severe_respiratory_distress"],
+      "then": {"fact": "respiratory_failure_sign"},
+      "sources": ["ESI_V4"],
+      "reason_ar": "تشبّع الأكسجين أقل من 90% أو ضيق تنفس شديد يعني احتياج لتدخل فوري للحفاظ على التنفس",
+      "reason_en": "SpO2 below 90% or severe respiratory distress needs immediate intervention to maintain oxygenation"
+    },
+    {
+      "id": "D-MENING-RASH", "type": "derive",
+      "if_all": ["non_blanching_rash"],
+      "then": {"fact": "meningitis_red_flag"},
+      "sources": ["NHS_MENINGITIS"],
+      "reason_ar": "طفح لا يختفي بالضغط (اختبار الكوباية) قد يدل على تسمم دموي/التهاب سحائي",
+      "reason_en": "A rash that does not fade under a glass may indicate meningococcal septicaemia"
+    },
+    {
+      "id": "D-MENING-NECK", "type": "derive",
+      "if_all": ["stiff_neck", "photophobia"],
+      "then": {"fact": "meningitis_red_flag"},
+      "sources": ["NHS_MENINGITIS"],
+      "reason_ar": "تيبّس الرقبة مع عدم القدرة على النظر للضوء من علامات الالتهاب السحائي",
+      "reason_en": "Stiff neck with inability to look at bright lights is a meningitis warning sign"
+    },
+    {
+      "id": "D-ACS-PATTERN", "type": "derive",
+      "if_all": ["chest_pain"],
+      "if_any": ["chest_pain_tight_pressure", "chest_pain_spreads", "chest_pain_over_15min"],
+      "then": {"fact": "acs_pattern"},
+      "sources": ["NHS_HEART_ATTACK", "NHS_CHEST_PAIN"],
+      "reason_ar": "ألم صدر ضاغط/معصور أو ينتشر للذراع/الرقبة/الفك أو يستمر أكتر من 15 دقيقة",
+      "reason_en": "Chest pain that is tight/squeezing, spreads to arms/neck/jaw, or lasts over 15 minutes"
+    },
+    {
+      "id": "D-ACS-ASSOC", "type": "derive",
+      "if_all": ["chest_pain"],
+      "if_any": ["sweating", "nausea_vomiting", "lightheaded", "shortness_of_breath"],
+      "then": {"fact": "acs_associated"},
+      "sources": ["NHS_CHEST_PAIN"],
+      "reason_ar": "ألم صدر مصحوب بعرق أو غثيان أو دوخة أو ضيق نفس",
+      "reason_en": "Chest pain together with sweating, feeling sick, light-headedness or shortness of breath"
+    },
+    {
+      "id": "D-ANAPH", "type": "derive",
+      "if_all": ["allergen_exposure_or_hives"],
+      "if_any": ["throat_tight_difficulty_swallowing", "severe_respiratory_distress"],
+      "then": {"fact": "anaphylaxis_pattern"},
+      "sources": ["NHS_ANAPHYLAXIS"],
+      "reason_ar": "تعرّض لمسبب حساسية أو طفح مع ضيق في الحلق/صعوبة بلع/صعوبة تنفس",
+      "reason_en": "Allergen exposure or hives together with throat tightness, difficulty swallowing or breathing"
+    },
+
+    {
+      "id": "R-ESI1-UNRESP", "type": "conclude",
+      "if_all": ["unresponsive"],
+      "then": {"level": 1}, "cf": 0.95,
+      "sources": ["ESI_V4"],
+      "reason_ar": "المريض فاقد الوعي/لا يستجيب: بيحتاج تدخل منقذ للحياة فورًا (ESI مستوى 1)",
+      "reason_en": "Unresponsive patient needs immediate life-saving intervention (ESI level 1)"
+    },
+    {
+      "id": "R-ESI1-RESP", "type": "conclude",
+      "if_all": ["respiratory_failure_sign"],
+      "then": {"level": 1}, "cf": 0.90,
+      "sources": ["ESI_V4"],
+      "reason_ar": "فشل تنفسي: SpO2 أقل من 90% أو ضيق تنفس شديد (ESI مستوى 1)",
+      "reason_en": "Respiratory failure: SpO2 below 90% or severe respiratory distress (ESI level 1)"
+    },
+    {
+      "id": "R-ESI1-CHEST-SHOCK", "type": "conclude",
+      "if_all": ["chest_pain", "sweating", "pale_blue_grey_skin"],
+      "then": {"level": 1}, "cf": 0.85,
+      "sources": ["ESI_V4", "NHS_HEART_ATTACK"],
+      "reason_ar": "ألم صدر مع شحوب وعرق: ESI يعتبره مستوى 1 لأنه قد يحتاج تدخل فوري",
+      "reason_en": "Chest pain with pallor and sweating meets ESI level-1 criteria"
+    },
+    {
+      "id": "R-ANAPH-SWELL", "type": "conclude",
+      "if_all": ["swelling_lips_mouth_throat_tongue"],
+      "then": {"level": 1}, "cf": 0.90,
+      "sources": ["NHS_ANGIOEDEMA", "NHS_ANAPHYLAXIS"],
+      "reason_ar": "ورم مفاجئ في الشفايف/الفم/الحلق/اللسان: NHS توصي بالاتصال بالإسعاف فورًا",
+      "reason_en": "Sudden swelling of lips, mouth, throat or tongue: NHS advises calling emergency services immediately"
+    },
+    {
+      "id": "R-ANAPH-PATTERN", "type": "conclude",
+      "if_all": ["anaphylaxis_pattern"],
+      "then": {"level": 1}, "cf": 0.90,
+      "sources": ["NHS_ANAPHYLAXIS"],
+      "reason_ar": "أعراض صدمة تحسسية محتملة (anaphylaxis): حالة طوارئ طبية",
+      "reason_en": "Possible anaphylaxis: a medical emergency"
+    },
+
+    {
+      "id": "R-STROKE-FAST", "type": "conclude",
+      "if_all": ["any_fast_sign"],
+      "then": {"level": 2}, "cf": 0.90,
+      "sources": ["NHS_FAST", "ESI_V4"],
+      "reason_ar": "اشتباه سكتة دماغية (FAST): اتصل بالإسعاف فورًا حتى لو العرض بسيط",
+      "reason_en": "Suspected stroke (FAST): call emergency services immediately even if symptoms seem mild"
+    },
+    {
+      "id": "R-STROKE-SUDDEN", "type": "conclude",
+      "if_any": ["sudden_one_sided_weakness_numbness", "sudden_vision_loss"],
+      "then": {"level": 2}, "cf": 0.80,
+      "sources": ["NHS_STROKE_WALES"],
+      "reason_ar": "ضعف/تنميل مفاجئ في جانب واحد أو فقدان مفاجئ للنظر من أعراض السكتة",
+      "reason_en": "Sudden one-sided weakness/numbness or sudden vision loss are stroke symptoms"
+    },
+    {
+      "id": "R-ACS-PATTERN", "type": "conclude",
+      "if_all": ["acs_pattern"],
+      "then": {"level": 2}, "cf": 0.85,
+      "sources": ["NHS_HEART_ATTACK", "NHS_CHEST_PAIN", "ESI_V4"],
+      "reason_ar": "نمط ألم صدر مشتبه بنوبة قلبية: ESI مستوى 2 (يحتاج رسم قلب خلال 10 دقائق)",
+      "reason_en": "Chest pain pattern suspicious for a heart attack: ESI level 2 (ECG within 10 minutes)"
+    },
+    {
+      "id": "R-ACS-ASSOC", "type": "conclude",
+      "if_all": ["acs_associated"],
+      "then": {"level": 2}, "cf": 0.85,
+      "sources": ["NHS_CHEST_PAIN"],
+      "reason_ar": "ألم صدر مع أعراض مصاحبة (عرق/غثيان/دوخة/ضيق نفس): قد تكون نوبة قلبية",
+      "reason_en": "Chest pain with associated symptoms could be a heart attack"
+    },
+    {
+      "id": "R-MENING", "type": "conclude",
+      "if_all": ["meningitis_red_flag"],
+      "then": {"level": 2}, "cf": 0.85,
+      "sources": ["NHS_MENINGITIS"],
+      "reason_ar": "علامات خطر التهاب سحائي/تسمم دموي: اطلب الإسعاف ولا تنتظر ظهور باقي الأعراض",
+      "reason_en": "Meningitis/septicaemia red flags: call emergency services; do not wait for other symptoms"
+    },
+    {
+      "id": "R-HEADACHE", "type": "conclude",
+      "if_all": ["worst_headache_of_life"],
+      "then": {"level": 2}, "cf": 0.80,
+      "sources": ["ESI_V4"],
+      "reason_ar": "أسوأ صداع في الحياة بشكل مفاجئ: ESI يعتبره موقف عالي الخطورة (احتمال نزيف دماغي)",
+      "reason_en": "Sudden 'worst headache of my life' is an ESI high-risk situation (possible brain bleed)"
+    },
+    {
+      "id": "R-CONFUSION", "type": "conclude",
+      "if_all": ["new_confusion"],
+      "then": {"level": 2}, "cf": 0.80,
+      "sources": ["ESI_V4"],
+      "reason_ar": "تغيّر حاد في الوعي (تشوش/نعاس شديد): ESI مستوى 2",
+      "reason_en": "Acute change in mental status (confused/lethargic/disoriented): ESI level 2"
+    },
+    {
+      "id": "R-SEIZURE", "type": "conclude",
+      "if_all": ["seizure_first_time"],
+      "then": {"level": 2}, "cf": 0.70,
+      "sources": ["NHS_MENINGITIS"],
+      "reason_ar": "تشنج لأول مرة ضمن العلامات التي توصي NHS فيها بالإسعاف",
+      "reason_en": "A first-ever seizure is among the signs for which NHS advises calling 999"
+    },
+    {
+      "id": "R-INFANT-FEVER", "type": "conclude",
+      "if_all": [
+        {"fact": "age_months", "op": "<", "value": 3},
+        {"fact": "temp_c", "op": ">=", "value": 38},
+        {"fact": "fever_after_vaccination_48h", "op": "==", "value": false}
+      ],
+      "then": {"level": 2}, "cf": 0.85,
+      "sources": ["NOTTS_ICB_FEVER", "ESI_V4"],
+      "reason_ar": "رضيع أقل من 3 شهور بحرارة 38 أو أكتر: يحتاج طوارئ فورًا (إلا لو الحرارة خلال 48 ساعة من تطعيم بدون علامات خطر أخرى)",
+      "reason_en": "Baby under 3 months with temperature of 38C or above needs urgent hospital care (unless fever within 48h of vaccination with no other red features)"
+    },
+    {
+      "id": "R-VITALS-DZ", "type": "conclude",
+      "if_all": ["danger_zone_vitals"],
+      "then": {"level": 2}, "cf": 0.60,
+      "sources": ["ESI_V4"],
+      "reason_ar": "العلامات الحيوية خارج الحدود الآمنة للعمر: ESI يوصي بالنظر في رفع الأولوية لمستوى 2",
+      "reason_en": "Vital signs outside the danger-zone limits for age: ESI advises considering upgrade to level 2"
+    },
+
+    {
+      "id": "R-BREATH-SUDDEN", "type": "conclude",
+      "if_all": ["sudden_more_breathless"],
+      "then": {"level": 3}, "cf": 0.70,
+      "sources": ["NHS_HEART_ATTACK"],
+      "reason_ar": "ضيق نفس زاد فجأة عن المعتاد: محتاج مشورة طبية عاجلة",
+      "reason_en": "Suddenly more short of breath than usual: needs urgent medical advice"
+    },
+    {
+      "id": "R-CHEST-ANY", "type": "conclude",
+      "if_all": ["chest_pain"],
+      "then": {"level": 3}, "cf": 0.50,
+      "sources": ["NHS_CHEST_PAIN"],
+      "reason_ar": "أي ألم في الصدر لازم يتقيّم طبيًا حتى لو غالبًا مش خطير",
+      "reason_en": "Any chest pain should get medical advice, even though most cases are not serious"
+    },
+    {
+      "id": "R-PAIN-SEVERE", "type": "conclude",
+      "if_all": [{"fact": "pain_score", "op": ">=", "value": 7}],
+      "then": {"level": 3}, "cf": 0.60,
+      "sources": ["ESI_V4"],
+      "reason_ar": "ألم شديد (7/10 أو أكتر): ESI يسمح للممرض بترفيعه لمستوى 2 حسب التقدير السريري",
+      "reason_en": "Severe pain (7/10 or more): ESI lets the triage nurse upgrade to level 2 by clinical judgment"
+    }
+  ]
+}
